@@ -112,6 +112,105 @@ namespace BancoX.Views.Clientes
             }
             return View(modelo);
         }
+
+        public ActionResult Edit(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            cliente c = BD.cliente.Find(id);
+            if (c == null)
+            {
+                return HttpNotFound();
+            }
+
+            ModeloIntermedio modelo = new ModeloIntermedio();
+            modelo.ModeloCliente = c;
+            List<telefono> telefonos = new List<telefono>();
+            telefonos = BD.telefono.Where(a => a.cedula == c.cedula).ToList();
+            int countt = telefonos.Count();
+            if (countt == 1)
+            {
+                modelo.ModeloTelf1 = telefonos.ElementAt(0);
+            }
+            else if (countt == 2)
+            {
+                modelo.ModeloTelf2 = telefonos.ElementAt(1);
+            }
+
+            List<cuenta> cuentas = new List<cuenta>();
+            cuentas = BD.cuenta.Where(a => a.cedula == c.cedula).ToList();
+            int countc = cuentas.Count();
+            if (countc == 1)
+            {
+                modelo.ModeloCuenta1 = cuentas.ElementAt(0);
+            }
+            else if (countc == 2)
+            {
+                modelo.ModeloCuenta2 = cuentas.ElementAt(1);
+            }
+            else if (countc == 3)
+            {
+                modelo.ModeloCuenta3 = cuentas.ElementAt(2);
+            }
+
+            return View(modelo);
+        }
+
+        public ActionResult Delete(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            cliente c = BD.cliente.Find(id);
+            if (c == null)
+            {
+                return HttpNotFound();
+            }
+            ModeloIntermedio modelo = new ModeloIntermedio();
+            modelo.ModeloCliente = c;
+            List<telefono> telefonos = new List<telefono>();
+            telefonos = BD.telefono.Where(a => a.cedula == c.cedula).ToList();
+            int countt = telefonos.Count();
+            if (countt == 1)
+            {
+                modelo.ModeloTelf1 = telefonos.ElementAt(0);
+            }
+            else if (countt == 2)
+            {
+                modelo.ModeloTelf2 = telefonos.ElementAt(1);
+            }
+
+            List<cuenta> cuentas = new List<cuenta>();
+            cuentas = BD.cuenta.Where(a => a.cedula == c.cedula).ToList();
+            int countc = cuentas.Count();
+            if (countc == 1)
+            {
+                modelo.ModeloCuenta1 = cuentas.ElementAt(0);
+            }
+            else if (countc == 2)
+            {
+                modelo.ModeloCuenta2 = cuentas.ElementAt(1);
+            }
+            else if (countc == 3)
+            {
+                modelo.ModeloCuenta3 = cuentas.ElementAt(2);
+            }
+
+            return View(modelo);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(string id)
+        {
+            cliente c = BD.cliente.Find(id);
+            BD.cliente.Remove(c);
+            BD.SaveChanges();
+            return RedirectToAction("Index");
+        }
     }
 }
 
